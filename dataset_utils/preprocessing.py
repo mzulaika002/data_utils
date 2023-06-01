@@ -1,4 +1,20 @@
+################################################################################
+# #
+# #
+##
+# *****************************************************************************#
+# Autora:   Muitze Zulaika Gallastegi                                          #
+# Fecha:    02/06/2023                                                         #
+################################################################################
 
+
+# CARGAR LIBRERIAS -------------------------------------------------------------
+import pandas as pd
+
+# CARGAR FUNCIONES DE OTROS FICHEROS -------------------------------------------
+from dataset_utils.dataset import Dataset
+
+# FUNCIONES --------------------------------------------------------------------
 def normalize_variable(x):
     """
     Normaliza una variable numérica 'x' utilizando la normalización min-max.
@@ -118,7 +134,7 @@ def standardize_dataset(dataset):
     
     return standardized_dataset
 
-import pandas as pd
+
 
 def normalize_dataframe(df):
     """

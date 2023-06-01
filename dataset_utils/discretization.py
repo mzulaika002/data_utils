@@ -1,5 +1,16 @@
+################################################################################
+# #
+# #
+##
+# *****************************************************************************#
+# Autora:   Muitze Zulaika Gallastegi                                          #
+# Fecha:    02/06/2023                                                         #
+################################################################################
+
+# CARGAR FUNCIONES DE OTROS FICHEROS -------------------------------------------
 from dataset_utils.dataset import Dataset
 
+# FUNCIONES --------------------------------------------------------------------
 def discretizeEW(x, num_bins):
   """
   Discretizar un atributo de entrada `x` en `num_bins` intervalos usando la discretización Equal Width.

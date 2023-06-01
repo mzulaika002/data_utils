@@ -1,7 +1,22 @@
+################################################################################
+# #
+# #
+##
+# *****************************************************************************#
+# Autora:   Muitze Zulaika Gallastegi                                          #
+# Fecha:    02/06/2023                                                         #
+################################################################################
+
+
+# CARGAR LIBRERIAS -------------------------------------------------------------
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# CARGAR FUNCIONES DE OTROS FICHEROS -------------------------------------------
+from dataset_utils.dataset import Dataset
+
+# FUNCIONES --------------------------------------------------------------------
 def plot_auc(fpr, tpr, auc_score):
     """
     Función para graficar la curva ROC y el AUC.

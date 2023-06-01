@@ -1,10 +1,22 @@
-## ENTROPIA
+################################################################################
+# #
+# #
+##
+# *****************************************************************************#
+# Autora:   Muitze Zulaika Gallastegi                                          #
+# Fecha:    02/06/2023                                                         #
+################################################################################
 
+
+# CARGAR LIBRERIAS -------------------------------------------------------------
 from math import log2
 import numpy as np
 import pandas as pd
 
+# CARGAR FUNCIONES DE OTROS FICHEROS -------------------------------------------
+from dataset_utils.dataset import Dataset
 
+# FUNCIONES ENTROPIA -----------------------------------------------------------
 def entropy(x):
     """
     Calcular la entropía de una variable discreta.
@@ -56,12 +68,7 @@ def get_entropies(dataframe):
     
     return entropies
 
-
-## VARIANZA
-
-import numpy as np
-import pandas as pd
-
+# FUNCIONES VARIANZA -----------------------------------------------------------
 def get_variances(matrix):
     """
     Calcular la varianza de cada columna en la matriz de entrada.
@@ -139,8 +146,8 @@ def get_column_variances(data):
         # Si los datos no son ninguno de los tipos aceptados, lanzar una excepción de TypeError
         raise TypeError("Input must be a Pandas dataframe, a NumPy array, or a list")
 
-## AUC
 
+# FUNCIONES AUC ----------------------------------------------------------------
 def ROC_AUC(df):
     """
     Calcula los puntos de la curva ROC y el área bajo la curva ROC (AUC) para un dataframe dado.

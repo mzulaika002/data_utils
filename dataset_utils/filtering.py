@@ -1,5 +1,16 @@
+################################################################################
+# #
+# #
+##
+# *****************************************************************************#
+# Autora:   Muitze Zulaika Gallastegi                                          #
+# Fecha:    02/06/2023                                                         #
+################################################################################
 
+# CARGAR FUNCIONES DE OTROS FICHEROS -------------------------------------------
+from dataset_utils.dataset import Dataset
 
+# FUNCIONES --------------------------------------------------------------------
 def filter_variables(dataset, metric, threshold):
     """
     Filtra las variables de un dataset en base a una métrica y un umbral.

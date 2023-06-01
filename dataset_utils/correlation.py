@@ -1,8 +1,21 @@
+################################################################################
+# El script "correlation.py" contiene funciones para calcular                  #
+# la correlación de Pearson entre variables numéricas y la información mutua   #
+# entre variables categóricas.                                                 #
+# *****************************************************************************#
+# Autora:   Muitze Zulaika Gallastegi                                          #
+# Fecha:    02/06/2023                                                         #
+################################################################################
 
 
+# CARGAR LIBRERIAS -------------------------------------------------------------
 import numpy as np
 from math import log2
 
+# CARGAR FUNCIONES DE OTROS FICHEROS -------------------------------------------
+from dataset_utils.dataset import Dataset
+
+# FUNCIONES --------------------------------------------------------------------
 def pearson_correlation(x, y):
     """
     Calcula la correlación de Pearson entre dos variables numéricas.

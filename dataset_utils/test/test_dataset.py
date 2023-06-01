@@ -15,14 +15,14 @@ class TestDataset(unittest.TestCase):
 
     def test_read_data(self):
         # Test reading data from a file
-        file_path = '/home/mz/Mahaigaina/KISA/SME/Python/datasets/Student_bucketing.csv'
+        file_path = '/home/mz/Mahaigaina/KISA/SME/Python/dataset_utils/test_data.csv'
         self.dataset.read_data(file_path)
         print(len(self.dataset.data))
-        #self.assertEqual(len(self.dataset.data), 3)  # Check if data is loaded correctly
+        self.assertEqual(len(self.dataset.data), 3)  # Check if data is loaded correctly
 
     def test_write_data(self):
         # Test writing data to a file
-        file_path = '/home/mz/Mahaigaina/KISA/SME/Python/datasets/Student_bucketing.csv'
+        file_path = '/home/mz/Mahaigaina/KISA/SME/Python/dataset_utils/test_data.csv'
         self.dataset.write_data(file_path)
         loaded_data = pd.read_csv(file_path)
         self.assertEqual(len(loaded_data), 3)  # Check if data is written correctly

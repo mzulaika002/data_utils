@@ -1,69 +1,59 @@
-import unittest
-import pandas as pd
+# Importar los módulos
 from dataset_utils.dataset import *
 
+# Crear un objeto Dataset vacio
+ds = Dataset()
 
-class TestDataset(unittest.TestCase):
-    def setUp(self):
-        # Create a sample dataset for testing
-        data = {
-            'Name': ['John', 'Alice', 'Bob'],
-            'Age': [25, 30, 35],
-            'City': ['New York', 'Paris', 'London']
-        }
-        self.dataset = Dataset(data=pd.DataFrame(data))
+# Ayuda
+ds.show_help()
 
-    def test_read_data(self):
-        # Test reading data from a file
-        file_path = '/home/mz/Mahaigaina/KISA/SME/Python/dataset_utils/test_data.csv'
-        self.dataset.read_data(file_path)
-        print(len(self.dataset.data))
-        self.assertEqual(len(self.dataset.data), 3)  # Check if data is loaded correctly
+# Leer datos desde un archivo
+ds = ds.read_data('/home/mz/Mahaigaina/KISA/SME/Python/datasets/Student_bucketing.csv')
 
-    def test_write_data(self):
-        # Test writing data to a file
-        file_path = '/home/mz/Mahaigaina/KISA/SME/Python/dataset_utils/test_data.csv'
-        self.dataset.write_data(file_path)
-        loaded_data = pd.read_csv(file_path)
-        self.assertEqual(len(loaded_data), 3)  # Check if data is written correctly
+# Obtener el DataFrame del conjunto de datos
+data = ds.get_data()
+print(data)
 
-    def test_get_attribute(self):
-        # Test getting attribute values
-        attribute = 'Age'
-        attribute_values = self.dataset.get_attribute(attribute)
-        expected_values = pd.Series([25, 30, 35])
-        pd.testing.assert_series_equal(attribute_values, expected_values)  # Check if attribute values match
+# Crear un nuevo objeto Dataset
+data = {
+    'Nombre': ['Ane', 'Maider', 'Mikel'],
+    'Edad': [25, 30, 35],
+    'Ciudad': ['Donostia', 'Iruña', 'Baiona']
+    }
+dataset = Dataset(data)
 
-        # Test getting non-existing attribute
-        non_existing_attribute = 'Salary'
-        with self.assertRaises(ValueError):
-            self.dataset.get_attribute(non_existing_attribute)
+# Escribir datos en un archivo
+dataset.write_data('data_output.csv')
 
-    def test_set_attribute(self):
-        # Test setting attribute values
-        attribute = 'City'
-        new_values = ['Tokyo', 'Berlin', 'Sydney']
-        self.dataset.set_attribute(attribute, new_values)
-        updated_attribute_values = self.dataset.get_attribute(attribute)
-        expected_values = pd.Series(new_values)
-        pd.testing.assert_series_equal(updated_attribute_values, expected_values)  # Check if attribute values are updated
+# Leer datos desde un archivo
+dataset.read_data('data_output.csv')
 
-        # Test setting values for non-existing attribute
-        non_existing_attribute = 'Salary'
-        with self.assertRaises(ValueError):
-            self.dataset.set_attribute(non_existing_attribute, [50000, 60000, 70000])
+# Obtener el DataFrame de pandas que representa los datos del conjunto de datos
+dataframe = dataset.get_data()
+print(dataframe)
+print()
 
-    def test_get_attributes(self):
-        # Test getting attribute names
-        attributes = self.dataset.get_attributes()
-        expected_attributes = ['Name', 'Age', 'City']
-        self.assertListEqual(attributes, expected_attributes)  # Check if attribute names match
+# Obtener la lista de nombres de atributos
+attribute_names = dataset.get_attributes()
+print(attribute_names)
+print()
 
-    def test_get_data(self):
-        # Test getting the DataFrame representing the data
-        data = self.dataset.get_data()
-        self.assertTrue(isinstance(data, pd.DataFrame))  # Check if the returned object is a DataFrame
+# Obtener los valores de un atributo específico
+attribute_values = dataset.get_attribute('Nombre')
+print(attribute_values)
+print()
+
+# Establecer los valores de un atributo específico
+set_values = [22, 20, 21]
+dataset.set_attribute('Edad', set_values)
+dataframe = dataset.get_data()
+print(dataframe)
+print()
+
+# Establecer los valores de un nuevo atributo
+dataset.new_attribute('Altura', [165.5, 170.2, 180.0])
+dataframe = dataset.get_data()
+print(dataframe)
+print()
 
 
-if __name__ == '__main__':
-    unittest.main()

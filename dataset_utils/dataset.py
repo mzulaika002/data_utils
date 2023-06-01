@@ -61,6 +61,23 @@ print(data_frame)
 
 # ANALISIS --------------------------------------------------------------------
 class Dataset:
+    def show_help(self):
+        """
+        Muestra la guía de usuario con las funciones disponibles.
+        """
+        help_text = """
+        Las funciones disponibles:
+
+        1. read_data(file_path): Lee los datos desde un archivo y los carga en el objeto Dataset.
+        2. write_data(file_path): Escribe los datos del objeto Dataset en un archivo.
+        3. get_attribute(attribute): Obtiene los valores de un atributo específico del conjunto de datos.
+        4. new_attribute(attribute, values): Establece los valores de un nuevo atributo específico en el conjunto de datos.
+        5. set_attribute(attribute, values): Establece los valores de un atributo específico en el conjunto de datos.
+        6. get_attributes(): Obtiene una lista de los nombres de los atributos en el conjunto de datos.
+        7. get_data(): Obtiene el DataFrame de pandas que representa los datos del conjunto de datos.
+        """
+        print(help_text)
+
     def __init__(self, data=None):
         """
         Inicializa un objeto Dataset.
@@ -73,7 +90,7 @@ class Dataset:
         else:
             self.data = pd.DataFrame(data)  # Convierte los datos en un DataFrame
 
-
+    
     def read_data(self, file_path):
         """
         Lee los datos desde un archivo y los carga en el objeto Dataset.
@@ -82,6 +99,7 @@ class Dataset:
         - file_path: Ruta del archivo que contiene los datos.
         """
         self.data = pd.read_csv(file_path)  # lectura de datos desde un archivo CSV
+        return self
 
     def write_data(self, file_path):
         """
@@ -109,7 +127,7 @@ class Dataset:
             if attribute in self.data.columns:
                 return self.data[attribute]
             else:
-                raise ValueError(f"El atributo '{attribute}' no existe en el conjunto de datos, si quiere crear un nuevo atributo use la función \"new_attribute\".")
+                raise ValueError(f"El atributo '{attribute}' no existe en el conjunto de datos, si quiere crear un nuevo atributo use la función \"new_attribute(attribute, values)\".")
         except ValueError as e:
             print(e)
 
@@ -125,7 +143,7 @@ class Dataset:
             if attribute not in self.data.columns:
                 self.data[attribute] = values
             else:
-                raise ValueError(f"El atributo '{attribute}' ya existe en el conjunto de datos, si quieres modificarlo usa la función \"set_attribute\".")
+                raise ValueError(f"El atributo '{attribute}' ya existe en el conjunto de datos, si quieres modificarlo usa la función \"set_attribute(attribute, values)\".")
         except ValueError as e:
             print(e)
 
@@ -145,7 +163,7 @@ class Dataset:
             if attribute in self.data.columns:
                 self.data[attribute] = values
             else:
-                raise ValueError(f"El atributo '{attribute}' no existe en el conjunto de datos, si quiere crear un nuevo atributo use la función \"new_attribute\".")
+                raise ValueError(f"El atributo '{attribute}' no existe en el conjunto de datos, si quiere crear un nuevo atributo use la función \"new_attribute(attribute, values)\".")
         except ValueError as e:
             print(e)
 

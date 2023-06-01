@@ -20,7 +20,11 @@ class Dataset:
         Parámetros:
         - data: DataFrame de pandas opcional que contiene los datos del conjunto de datos.
         """
-        self.data = data
+        if data is None:
+            self.data = pd.DataFrame()  # Crea un DataFrame vacío si no se proporcionan datos
+        else:
+            self.data = pd.DataFrame(data)  # Convierte los datos en un DataFrame
+
 
     def read_data(self, file_path):
         """

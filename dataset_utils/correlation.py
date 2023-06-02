@@ -10,61 +10,89 @@
 
 # CARGAR LIBRERIAS -------------------------------------------------------------
 import numpy as np
-from math import log2
+import math 
 
 # CARGAR FUNCIONES DE OTROS FICHEROS -------------------------------------------
 from dataset_utils.dataset import Dataset
 
 # FUNCIONES --------------------------------------------------------------------
-def pearson_correlation(x, y):
+def calculate_correlation(dataset, variable1, variable2):
     """
-    Calcula la correlación de Pearson entre dos variables numéricas.
+    Calcula la correlación entre dos variables en un conjunto de datos.
 
     Parámetros:
-    - x (list): Una lista de valores numéricos para la variable X.
-    - y (list): Una lista de valores numéricos para la variable Y.
+    - dataset: Objeto Dataset que contiene los datos.
+    - variable1: Nombre de la primera variable.
+    - variable2: Nombre de la segunda variable.
 
     Devoluciones:
-    - correlation (float): El valor de la correlación de Pearson entre X e Y.
+    - Coeficiente de correlación entre las dos variables.
     """
-    mean_x = np.mean(x)
-    mean_y = np.mean(y)
-    numerator = sum((xi - mean_x) * (yi - mean_y) for xi, yi in zip(x, y))
-    denominator = np.sqrt(sum((xi - mean_x) ** 2 for xi in x)) * np.sqrt(sum((yi - mean_y) ** 2 for yi in y))
-    correlation = numerator / denominator if denominator != 0 else 0
+    data = dataset.get_data()
+    values1 = dataset.get_attribute(variable1)
+    values2 = dataset.get_attribute(variable2)
+
+    try:
+        # Comprobar el tipo de las variables
+        if isinstance(values1[0], (int, float,np.int64)) and isinstance(values2[0], (int, float,np.int64)):
+            # Calcular la correlación para variables numéricas
+            return calculate_numeric_correlation(values1, values2)
+        elif isinstance(values1[0], str) and isinstance(values2[0], str):
+            # Calcular la información mutua para variables categóricas
+            return calculate_categorical_mutual_information(values1, values2, data)
+        else:
+            raise ValueError("Las variables deben ser numéricas o categóricas.")
+    except (IndexError, ValueError) as e:
+        print("Error:", str(e))
+        return None
+
+def calculate_numeric_correlation(values1, values2):
+    """
+    Calcula el coeficiente de correlación entre dos variables numéricas.
+
+    Parámetros:
+    - values1: Valores de la primera variable.
+    - values2: Valores de la segunda variable.
+
+    Devoluciones:
+    - Coeficiente de correlación entre las dos variables.
+    """
+    n = len(values1)
+    mean1 = sum(values1) / n
+    mean2 = sum(values2) / n
+    cov = sum((x - mean1) * (y - mean2) for x, y in zip(values1, values2)) / n
+    std1 = math.sqrt(sum((x - mean1) ** 2 for x in values1) / n)
+    std2 = math.sqrt(sum((x - mean2) ** 2 for x in values2) / n)
+    correlation = cov / (std1 * std2)
     return correlation
 
-def mutual_information(x, y):
+def calculate_categorical_mutual_information(values1, values2, data):
     """
     Calcula la información mutua entre dos variables categóricas.
 
     Parámetros:
-    - x (list): Una lista de valores categóricos para la variable X.
-    - y (list): Una lista de valores categóricos para la variable Y.
+    - values1: Valores de la primera variable.
+    - values2: Valores de la segunda variable.
+    - data: DataFrame de pandas que contiene los datos.
 
     Devoluciones:
-    - mutual_info (float): El valor de la información mutua entre X e Y.
+    - Información mutua entre las dos variables.
     """
-    joint_prob = {}
-    x_prob = {}
-    y_prob = {}
-    n = len(x)
+    n = len(values1)
+    unique_values1 = set(values1)
+    unique_values2 = set(values2)
+    mutual_information = 0.0
 
-    for xi, yi in zip(x, y):
-        joint_prob[(xi, yi)] = joint_prob.get((xi, yi), 0) + 1
-        x_prob[xi] = x_prob.get(xi, 0) + 1
-        y_prob[yi] = y_prob.get(yi, 0) + 1
+    for value1 in unique_values1:
+        p1 = len(data[data[values1] == value1]) / n
+        for value2 in unique_values2:
+            p2 = len(data[data[values2] == value2]) / n
+            p12 = len(data[(data[values1] == value1) & (data[values2] == value2)]) / n
+            if p12 > 0:
+                mutual_information += p12 * math.log(p12 / (p1 * p2))
 
-    mutual_info = 0.0
-    for xi, yi in joint_prob:
-        prob_xy = joint_prob[(xi, yi)] / n
-        prob_x = x_prob[xi] / n
-        prob_y = y_prob[yi] / n
-        mutual_info += prob_xy * log2(prob_xy / (prob_x * prob_y))
+    return mutual_information
 
-    return mutual_info
-
-def calculate_correlation(dataset):
     """
     Calcula la correlación (o información mutua para variables categóricas) por pares entre variables de un dataset.
 
@@ -74,6 +102,7 @@ def calculate_correlation(dataset):
     Devoluciones:
     - correlation_matrix (np.ndarray): Una matriz cuadrada que contiene las correlaciones (o información mutua) por pares entre las variables del dataset.
     """
+
     num_attributes = dataset.num_attributes()
     correlation_matrix = np.zeros((num_attributes, num_attributes))
 

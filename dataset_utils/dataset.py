@@ -2,7 +2,7 @@
 # Este script "dataset.py" proporciona una clase Dataset para trabajar         #
 # con conjuntos de datos: cargar, modificar y analizar conjuntos de datos      #
 # de forma sencilla                                                            #
-# *****************************************************************************#
+# **************************************************************************** #
 # Autora:   Muitze Zulaika Gallastegi                                          #
 # Fecha:    02/06/2023                                                         #
 ################################################################################
@@ -156,29 +156,30 @@ class Dataset:
         return Dataset(self.data.copy())
 
 
-def num_attributes(self):
+    def num_attributes(self):
+            """
+            Obtiene el número de atributos en el conjunto de datos.
+
+            Devoluciones:
+            - Entero que representa el número de atributos.
+            """
+            return len(self.data.columns)
+
+    def get_column(self, i):
         """
-        Obtiene el número de atributos en el conjunto de datos.
+        Obtiene una columna específica del conjunto de datos.
+
+        Parámetros:
+        - i: Índice de la columna deseada.
 
         Devoluciones:
-        - Entero que representa el número de atributos.
+        - Serie de pandas que contiene los valores de la columna especificada.
+
+        Excepciones:
+        - IndexError: Si el índice está fuera de rango.
         """
-        return len(self.data.columns)
+        try:
+            return self.data.iloc[:, i]
+        except IndexError:
+            raise IndexError("El índice está fuera de rango.")
 
-def get_column(self, i):
-    """
-    Obtiene una columna específica del conjunto de datos.
-
-    Parámetros:
-    - i: Índice de la columna deseada.
-
-    Devoluciones:
-    - Serie de pandas que contiene los valores de la columna especificada.
-
-    Excepciones:
-    - IndexError: Si el índice está fuera de rango.
-    """
-    try:
-        return self.data.iloc[:, i]
-    except IndexError:
-        raise IndexError("El índice está fuera de rango.")

@@ -10,6 +10,7 @@ from dataset_utils.visualization import *
 # Cargar librerias
 import random
 
+
 ###########################################
 #                 DATASET                 #
 ###########################################
@@ -50,12 +51,15 @@ print(dataframe)
 
 
 
+
 ###########################################
 #              DISCRETIZACIÓN             #
 ###########################################
 
 # Discretizar el dataset utilizando el método de igual frecuencia
 discretized_dataset = discretize_dataset(dataset, num_bins=5, method='equal_frequency')
+
+
 
 
 
@@ -90,10 +94,11 @@ auc = calculate_attribute_auc(dataset,'Age', 'Bin')
 print("AUC de 'edad':", auc)
 
 
+
+
 ###########################################
 #     NORMALIZACIÓ Y ESTANDARIZACIÓN      #
 ###########################################
-
 
 # Normalizar un atributo
 grade = dataset.get_attribute('Course_Grade')
@@ -108,6 +113,8 @@ dataset_normalizado = normalize_dataset(dataset)
 
 # Estandarización del dataset completo
 dataset_estandarizado = standardize_dataset(dataset)
+
+
 
 
 
@@ -137,15 +144,33 @@ print(filtered_dataset.get_attributes())
 
 
 
-
 ###########################################
 #               CORRELACIÓN               #
 ###########################################
 
 # Calcular la matriz de correlación
-correlation_matrix = calculate_correlation(data)
+atributo1 = "Age"
+atributo2 = "marks"
+correlation_matrix = calculate_correlation(dataset, atributo1, atributo2)
+print(f'La correlación entre {atributo1} y {atributo2} es: {correlation_matrix}')
 
 
+
+
+###########################################
+#               VISUALIZACIÓN             #
+###########################################
+
+# Graficar la curva ROC y el AUC
+plot_auc(fpr, tpr, auc_score)
+
+# Graficar la matriz de correlación
+plot_correlation_matrix(correlation_matrix)
+
+# Graficar los valores de entropía
+entropy_values = [0.1, 0.5, 0.3]
+labels = ['A', 'B', 'C']
+plot_entropy(entropy_values, labels)
 
 ###########################################
 #               VISUALIZACIÓN             #

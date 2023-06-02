@@ -35,10 +35,3 @@ print(dataset_normalizado.get_data())
 dataset_estandarizado = standardize_dataset(dataset)
 print("Dataset estandarizado:")
 print(dataset_estandarizado.get_data())
-
-
-
-
-dataset_estandarizado = standardize_dataset(data)
-print("Dataset estandarizado:")
-print(dataset_estandarizado)

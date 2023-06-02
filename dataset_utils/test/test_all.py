@@ -115,8 +115,26 @@ dataset_estandarizado = standardize_dataset(dataset)
 #         FILTRADO DE VARIABLES           #
 ###########################################
 
-# Filtrar las variables del dataset basado en la métrica y umbral
-filtered_dataset = filter_variables(data, metric='entropy', threshold=0.5)
+# Filtrar variables basado en la entropía mayor que 1
+filtered_dataset = filter_variables(dataset, 'entropy', 1, '>')
+# Mostrar las variables filtradas
+print("Filtrado Entropia")
+print(filtered_dataset.get_attributes())
+
+# Filtrar variables basado en la varianza mayor que 1
+print("Filtrado Varianza")
+filtered_dataset = filter_variables(dataset, 'variance', 1, '>')
+# Mostrar las variables filtradas
+print(filtered_dataset.get_attributes())
+
+# Filtrar variables basado en la auc mayor que 1
+print("Filtrado AUC")
+filtered_dataset = filter_variables(dataset, 'auc', 1, '>','Bin' )
+# Mostrar las variables filtradas
+print(filtered_dataset.get_attributes())
+
+
+
 
 
 

@@ -1,12 +1,11 @@
 ################################################################################
-# #
-# #
-##
+# El módulo `preprocessing` proporciona funciones para realizar tareas comunes #
+# de preprocesamiento, como la normalización y estandarización de variables en #
+# un conjunto de datos.                                                       #
 # *****************************************************************************#
 # Autora:   Muitze Zulaika Gallastegi                                          #
 # Fecha:    02/06/2023                                                         #
 ################################################################################
-
 
 # CARGAR LIBRERIAS -------------------------------------------------------------
 import pandas as pd
@@ -96,7 +95,7 @@ def normalize_dataset(dataset):
     if not isinstance(dataset, (Dataset, pd.DataFrame)):
         raise TypeError("El argumento 'dataset' debe ser un Dataset  de pandas.")
     
-    normalized_dataset = Dataset(data=dataset.get_data().copy())
+    normalized_dataset = dataset.copy()
     
     for attribute in normalized_dataset.get_attributes():
         values = normalized_dataset.get_attribute(attribute)
@@ -119,7 +118,7 @@ def standardize_dataset(dataset):
     if not isinstance(dataset, (Dataset, pd.DataFrame)):
         raise TypeError("El argumento 'dataset' debe ser un Dataset  de pandas.")
     
-    standardized_dataset = Dataset(data=dataset.get_data().copy())
+    standardized_dataset = dataset.copy()
     
     for attribute in standardized_dataset.get_attributes():
         values = standardized_dataset.get_attribute(attribute)

@@ -1,7 +1,6 @@
 ################################################################################
-# #
-# #
-##
+# El módulo 'Filtering' tiene una funciones para filtrar las variables de un   #
+# conjunto de datos según diferentes métricas y criterios de umbral.          #
 # *****************************************************************************#
 # Autora:   Muitze Zulaika Gallastegi                                          #
 # Fecha:    02/06/2023                                                         #
@@ -10,42 +9,46 @@
 # CARGAR FUNCIONES DE OTROS FICHEROS -------------------------------------------
 from dataset_utils.dataset import Dataset
 from dataset_utils.metrics import *
-def filter_variables(dataset, metric, threshold):
+
+def filter_variables(dataset, metric, threshold, operator, class_attribute=None):
     """
-    Filtra las variables de un dataset en base a una métrica y un umbral.
+    Filtra las variables del conjunto de datos según la métrica especificada y los criterios de umbral.
 
     Parámetros:
-    - dataset (Dataset): Un objeto Dataset que contiene los datos.
-    - metric (str): La métrica a utilizar para el filtrado. Puede ser 'entropy', 'variance' o 'auc'.
-    - threshold (float): El umbral a aplicar en la métrica. Solo se mantendrán las variables que superen este umbral.
+    - dataset (Dataset): Objeto Dataset que contiene los datos.
+    - metric (str): Métrica a utilizar para filtrar las variables. Puede ser 'entropy', 'variance' o 'auc'.
+    - threshold (float): Valor de umbral para comparar con la métrica.
+    - operator (str): Operador a utilizar para comparar la métrica con el umbral. Puede ser '>', '<', '=='.
 
     Devoluciones:
-    - filtered_dataset (Dataset): Un nuevo objeto Dataset que contiene únicamente las variables que cumplen el requisito de la métrica y umbral indicados.
+    - Nuevo objeto Dataset que contiene las variables filtradas.
     """
+    attributes = dataset.get_attributes()
+    filtered_data = Dataset()
 
-    filtered_dataset = Dataset()
-    if metric == 'entropy':
-        for attribute in dataset.get_attributes():
-            entropy = calculate_attribute_entropy(dataset, attribute)
-            if entropy is not None and entropy > threshold:
-                filtered_dataset.add_attribute(dataset.get_attribute(attribute).tolist(), attribute)
-    elif metric == 'variance':
-        for attribute in dataset.get_attributes():
-            variance = calculate_attribute_variance(dataset, attribute)
-            if variance is not None and variance > threshold:
-                filtered_dataset.set_attribute(dataset.get_attribute(attribute).tolist(), attribute)
-    elif metric == 'auc':
-        class_attribute = dataset.get_attributes()
-        for attribute in dataset.get_attributes():
-            auc = calculate_attribute_auc(dataset, attribute, class_attribute)
-            if auc is not None and auc > threshold:
-                filtered_dataset.add_attribute(dataset.get_attribute(attribute).tolist(), attribute)
-    else:
-        raise ValueError("Métrica inválida. Use 'entropy', 'variance' o 'auc'.")
+    for attribute in attributes:
+        if metric == 'entropy':
+            metric_value = calculate_attribute_entropy(dataset, attribute)
+        elif metric == 'variance':
+            metric_value = calculate_attribute_variance(dataset, attribute)
+        elif metric == 'auc':
+            metric_value = calculate_attribute_auc(dataset, attribute, class_attribute)
+        else:
+            print(f"Métrica '{metric}' no válida.")
+            return None
 
-    return filtered_dataset
+        if metric_value is not None: # Comprobar si la métrica se ha podido calcular
+            if operator == '>' and metric_value > threshold:
+                filtered_data.add_attribute(attribute, dataset.get_attribute(attribute))
+            elif operator == '<' and metric_value < threshold:
+                filtered_data.add_attribute(attribute, dataset.get_attribute(attribute))
+            elif operator == '==' and metric_value == threshold:
+                filtered_data.add_attribute(attribute, dataset.get_attribute(attribute))
 
+    if filtered_data.empty():
+       print("No hay atributos que cumplan con las condiciones especificadas.")
 
+    return filtered_data
 
 
 

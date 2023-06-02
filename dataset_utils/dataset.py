@@ -25,6 +25,8 @@ class Dataset:
         5. set_attribute(attribute, values): Establece los valores de un atributo específico en el conjunto de datos.
         6. get_attributes(): Obtiene una lista de los nombres de los atributos en el conjunto de datos.
         7. get_data(): Obtiene el DataFrame de pandas que representa los datos del conjunto de datos.
+        8. empty(): Comprueba si el objeto Dataset está vacío.
+        9. copy(): Crea una copia del objeto Dataset.
         """
         print(help_text)
 
@@ -132,3 +134,21 @@ class Dataset:
         - DataFrame de pandas que contiene los datos del conjunto de datos.
         """
         return self.data
+
+    def empty(self):
+        """
+        Comprueba si el objeto Dataset está vacío.
+
+        Devoluciones:
+        - True si el objeto Dataset está vacío, False de lo contrario.
+        """
+        return self.data.empty
+
+    def copy(self):
+        """
+        Crea una copia del objeto Dataset.
+
+        Devoluciones:
+        - Nuevo objeto Dataset que es una copia del objeto actual.
+        """
+        return Dataset(self.data.copy())

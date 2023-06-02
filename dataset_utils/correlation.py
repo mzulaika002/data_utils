@@ -74,13 +74,13 @@ def calculate_correlation(dataset):
     Devoluciones:
     - correlation_matrix (np.ndarray): Una matriz cuadrada que contiene las correlaciones (o información mutua) por pares entre las variables del dataset.
     """
-    num_attributes = len(dataset[0])
+    num_attributes = dataset.num_attributes()
     correlation_matrix = np.zeros((num_attributes, num_attributes))
 
     for i in range(num_attributes):
         for j in range(num_attributes):
-            attribute_i = dataset[i]
-            attribute_j = dataset[j]
+            attribute_i = dataset.get_column(i)
+            attribute_j = dataset.get_column(j)
 
             if isinstance(attribute_i[0], (int, float)) and isinstance(attribute_j[0], (int, float)):
                 # Variables numéricas: calcular correlación de Pearson
@@ -94,5 +94,3 @@ def calculate_correlation(dataset):
             correlation_matrix[i, j] = correlation
 
     return correlation_matrix
-
-

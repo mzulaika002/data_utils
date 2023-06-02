@@ -18,15 +18,17 @@ class Dataset:
         help_text = """
         Las funciones disponibles:
 
-        1. read_data(file_path): Lee los datos desde un archivo y los carga en el objeto Dataset.
-        2. write_data(file_path): Escribe los datos del objeto Dataset en un archivo.
-        3. get_attribute(attribute): Obtiene los valores de un atributo específico del conjunto de datos.
-        4. add_attribute(attribute, values): Establece los valores de un nuevo atributo específico en el conjunto de datos.
-        5. set_attribute(attribute, values): Establece los valores de un atributo específico en el conjunto de datos.
-        6. get_attributes(): Obtiene una lista de los nombres de los atributos en el conjunto de datos.
-        7. get_data(): Obtiene el DataFrame de pandas que representa los datos del conjunto de datos.
-        8. empty(): Comprueba si el objeto Dataset está vacío.
-        9. copy(): Crea una copia del objeto Dataset.
+        1.  read_data(file_path): Lee los datos desde un archivo y los carga en el objeto Dataset.
+        2.  write_data(file_path): Escribe los datos del objeto Dataset en un archivo.
+        3.  get_attribute(attribute): Obtiene los valores de un atributo específico del conjunto de datos.
+        4.  add_attribute(attribute, values): Establece los valores de un nuevo atributo específico en el conjunto de datos.
+        5.  set_attribute(attribute, values): Establece los valores de un atributo específico en el conjunto de datos.
+        6.  get_attributes(): Obtiene una lista de los nombres de los atributos en el conjunto de datos.
+        7.  get_data(): Obtiene el DataFrame de pandas que representa los datos del conjunto de datos.
+        8.  empty(): Comprueba si el objeto Dataset está vacío.
+        9.  copy(): Crea una copia del objeto Dataset.
+        10. num_attributes(): Obtiene el número de atributos en el conjunto de datos.
+        11. get_column(i): Obtiene una columna específica del conjunto de datos.
         """
         print(help_text)
 
@@ -152,3 +154,31 @@ class Dataset:
         - Nuevo objeto Dataset que es una copia del objeto actual.
         """
         return Dataset(self.data.copy())
+
+
+def num_attributes(self):
+        """
+        Obtiene el número de atributos en el conjunto de datos.
+
+        Devoluciones:
+        - Entero que representa el número de atributos.
+        """
+        return len(self.data.columns)
+
+def get_column(self, i):
+    """
+    Obtiene una columna específica del conjunto de datos.
+
+    Parámetros:
+    - i: Índice de la columna deseada.
+
+    Devoluciones:
+    - Serie de pandas que contiene los valores de la columna especificada.
+
+    Excepciones:
+    - IndexError: Si el índice está fuera de rango.
+    """
+    try:
+        return self.data.iloc[:, i]
+    except IndexError:
+        raise IndexError("El índice está fuera de rango.")

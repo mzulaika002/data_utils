@@ -1,54 +1,100 @@
 from dataset_utils.discretization import *
-import unittest
 import numpy as np
 
-class TestDiscretizationMethods(unittest.TestCase):
+import random
 
-    def test_equal_width_discretization_single_attribute(self):
-        attribute_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        num_bins = 3
-        expected_discretized_values = [0, 0, 0, 1, 1, 1, 2, 2, 2, 2]
-        discretized_values = equal_width_discretization_single_attribute(attribute_values, num_bins)
-        self.assertEqual(discretized_values.tolist(), expected_discretized_values)
+x = [11.5, 10.2, 1.2, 0.5, 5.3, 20.5, 8.4]
+# = [5, 10, 50, 72, 92, 104]
+#x = [5, 10, 11, 13, 15, 35, 50, 55, 72, 92, 204, 215]
+#x = [ 4, 7, 13, 16, 20, 24, 27, 29, 31, 33, 38, 42]
 
-    def test_equal_width_discretization_single_attribute_invalid_num_bins(self):
-        attribute_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        num_bins = 10
-        self.assertRaises(ValueError, equal_width_discretization_single_attribute, attribute_values, num_bins)
+x = np.array([11.5, 10.2, 1.2, 0.5, 5.3, 20.5, 8.4])
 
-    def test_equal_frequency_discretization_single_attribute(self):
-        attribute_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        num_bins = 3
-        expected_discretized_values = [0, 0, 0, 1, 1, 1, 2, 2, 2, 2]
-        discretized_values = equal_frequency_discretization_single_attribute(attribute_values, num_bins)
-        self.assertEqual(discretized_values.tolist(), expected_discretized_values)
+num_bins = 4
 
-    def test_equal_frequency_discretization_single_attribute_invalid_num_bins(self):
-        attribute_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        num_bins = 10
-        self.assertRaises(ValueError, equal_frequency_discretization_single_attribute, attribute_values, num_bins)
+x_discretized, cut_points = discretizeEW(x, num_bins)
+print("Equal Width ")
+print("Valores discretizados:", x_discretized)
+print("Puntos de corte:", cut_points)
+print()
 
-    def test_equal_width_discretization_dataset(self):
-        dataset = Dataset()
-        dataset.set_attribute('A', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-        dataset.set_attribute('B', [10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
-        num_bins = 3
-        expected_discretized_dataset = Dataset()
-        expected_discretized_dataset.set_attribute('A', [0, 0, 0, 1, 1, 1, 2, 2, 2, 2])
-        expected_discretized_dataset.set_attribute('B', [0, 0, 0, 1, 1, 1, 2, 2, 2, 2])
-        equal_width_discretization_dataset(dataset, num_bins)
-        self.assertEqual(dataset.get_data(), expected_discretized_dataset.get_data())
+x_discretized, cut_points = discretizeEF(x, num_bins)
+print("Equal Frequency ")
+print("Valores discretizados:", x_discretized)
+print("Puntos de corte:", cut_points)
+print()
 
-    def test_equal_frequency_discretization_dataset(self):
-        dataset = Dataset()
-        dataset.set_attribute('A', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-        dataset.set_attribute('B', [10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
-        num_bins = 3
-        expected_discretized_dataset = Dataset()
-        expected_discretized_dataset.set_attribute('A', [0, 0, 0, 1, 1, 1, 2, 2, 2, 2])
-        expected_discretized_dataset.set_attribute('B', [0, 0, 1, 1, 2, 2, 2, 2, 2, 2])
-        equal_frequency_discretization_dataset(dataset, num_bins)
-        self.assertEqual(dataset.get_data(), expected_discretized_dataset.get_data())
+x_discretized = smooth_by_bin_boundaries(x, num_bins)
+print("Smooth boundaries ")
+print("Valores discretizados:", x_discretized)
+print()
 
-if __name__ == '__main__':
-    unittest.main()
+x_discretized = smooth_by_bin_mean(x, num_bins)
+print("Smooth mean ")
+print("Valores discretizados:", x_discretized)
+print()
+
+x_discretized = smooth_by_bin_median(x, num_bins)
+print("Smooth median ")
+print("Valores discretizados:", x_discretized)
+print()
+
+
+
+x = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+num_bins = 3
+
+x_discretized, cut_points = discretizeEW(x, num_bins)
+
+print("Valores discretizados:", x_discretized)
+print("Puntos de corte:", cut_points)
+
+
+
+x = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
+num_bins = 4
+
+x_discretized, cut_points = discretizeEF(x, num_bins)
+
+print("Valores discretizados:", x_discretized)
+print("Puntos de corte:", cut_points)
+
+
+x = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
+num_bins = 4
+
+x_discretized, cut_points = discretizeEF(x, num_bins)
+
+print("Valores discretizados:", x_discretized)
+print("Puntos de corte:", cut_points)
+
+
+attribute = [5, 10, 15, 20, 25, 30, 35, 40]
+num_bins = 2
+method = 'equal_frequency'
+
+discretized_attribute, cut_points = discretize_attribute(attribute, num_bins, method)
+
+print("Atributo discretizado:", discretized_attribute)
+print("Puntos de corte:", cut_points)
+
+
+
+dataset = Dataset()
+dataset = dataset.read_data('/home/mz/Mahaigaina/KISA/SME/Python/datasets/Student_bucketing.csv')
+# Generar valores aleatorios de notas del curso
+course_grades = [random.uniform(0, 10) for _ in range(len(dataset.get_attribute('Age')))]
+# Agregar el atributo 'Course_Grade' al conjunto de datos
+dataset.add_attribute('Course_Grade', course_grades)
+
+
+num_bins = 3
+method = 'equal_width'
+
+discretized_dataset = discretize_dataset(dataset, num_bins, method)
+
+# Imprimir dataset discretizados
+print("Atributo discretizado:", discretized_dataset.get_data())
+
+attribute = dataset.get_attribute('Course_Grade')
+discretized_attribute = discretize_attribute(attribute, num_bins, method)

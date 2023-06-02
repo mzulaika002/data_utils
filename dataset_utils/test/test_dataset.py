@@ -51,7 +51,7 @@ print(dataframe)
 print()
 
 # Establecer los valores de un nuevo atributo
-dataset.new_attribute('Altura', [165.5, 170.2, 180.0])
+dataset.add_attribute('Altura', [165.5, 170.2, 180.0])
 dataframe = dataset.get_data()
 print(dataframe)
 print()

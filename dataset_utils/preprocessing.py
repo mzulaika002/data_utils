@@ -10,6 +10,7 @@
 
 # CARGAR LIBRERIAS -------------------------------------------------------------
 import pandas as pd
+import numpy as np
 
 # CARGAR FUNCIONES DE OTROS FICHEROS -------------------------------------------
 from dataset_utils.dataset import Dataset
@@ -20,155 +21,113 @@ def normalize_variable(x):
     Normaliza una variable numérica 'x' utilizando la normalización min-max.
 
     Parámetros:
-    - x (list): Una lista de valores numéricos.
+    - x (list o Numpy array): Una lista o Numpy array de valores numéricos.
 
     Devoluciones:
-    - x_normalized (list): Una lista con los valores normalizados de 'x'.
+    - x_normalized (Numpy array): Una array con los valores normalizados de 'x'.
     """
-    if not isinstance(x, list):
-        raise TypeError("El argumento 'x' debe ser una lista.")
-    
-    if len(x) == 0:
-        raise ValueError("La lista 'x' no puede estar vacía.")
-    
-    min_val = min(x)
-    max_val = max(x)
-    
-    x_normalized = [(val - min_val) / (max_val - min_val) for val in x]
-    
-    return x_normalized
+    try:
+        if isinstance(x, pd.Series):
+            x = x.values
+        if not isinstance(x, (list, np.ndarray)):
+            raise TypeError("El argumento 'x' debe ser una lista o un array numpy.")
+        
+        if len(x) == 0:
+            raise ValueError("La lista 'x' no puede estar vacía.")
 
+        unique_values = np.unique(x)
+        if np.array_equal(unique_values, [0, 1]):
+            return x  # return el mismo valor        
+        
+        min_val = np.min(x)
+        max_val = np.max(x)
+        
+        x_normalized = [(val - min_val) / (max_val - min_val) for val in x]
+        
+        return x_normalized
+    except ValueError as e:
+        print("Error:", e)
+        return None
 
 def standardize_variable(x):
     """
     Estandariza una variable numérica 'x' utilizando la estandarización z-score.
 
     Parámetros:
-    - x (list): Una lista de valores numéricos.
+    - x (list o Numpy array): Una lista o Numpy array de valores numéricos.
 
     Devoluciones:
-    - x_standardized (list): Una lista con los valores estandarizados de 'x'.
+    - x_standardized (Numpy array): Una array con los valores estandarizados de 'x'.
     """
-    if not isinstance(x, list):
-        raise TypeError("El argumento 'x' debe ser una lista.")
+    try:
+        if isinstance(x, pd.Series):
+            x = x.values
+        if not isinstance(x, (list, np.ndarray)):
+            raise TypeError("El argumento 'x' debe ser una lista o un arreglo numpy.")
+        
+        if len(x) == 0:
+            raise ValueError("La lista 'x' no puede estar vacía.")
     
-    if len(x) == 0:
-        raise ValueError("La lista 'x' no puede estar vacía.")
-    
-    mean_val = sum(x) / len(x)
-    std_dev = (sum((val - mean_val) ** 2 for val in x) / len(x)) ** 0.5
-    
-    x_standardized = [(val - mean_val) / std_dev for val in x]
-    
-    return x_standardized
+        unique_values = np.unique(x)
+        if np.array_equal(unique_values, [0, 1]):
+            return x
 
+        mean_val = sum(x) / len(x)
+        std_dev = (sum((val - mean_val) ** 2 for val in x) / len(x)) ** 0.5
+        
+        x_standardized = [(val - mean_val) / std_dev for val in x]
+        
+        return x_standardized
+
+    except ValueError as e:
+        print("Error:", e)
+        return None
 
 def normalize_dataset(dataset):
     """
     Realiza la normalización de todas las variables numéricas en un dataset.
 
     Parámetros:
-    - dataset (list): Un dataset representado como una lista de listas, donde cada lista interna representa
-                      una columna o atributo del dataset.
+    - dataset (Dataset): Un dataset.
 
     Devoluciones:
-    - normalized_dataset (list): Un nuevo dataset con las variables numéricas normalizadas.
+    - normalized_dataset (Dataset): Un nuevo dataset con las variables numéricas normalizadas.
     """
-    if not isinstance(dataset, list):
-        raise TypeError("El argumento 'dataset' debe ser una lista.")
+    if not isinstance(dataset, (Dataset, pd.DataFrame)):
+        raise TypeError("El argumento 'dataset' debe ser un Dataset  de pandas.")
     
-    if len(dataset) == 0:
-        raise ValueError("El dataset no puede estar vacío.")
+    normalized_dataset = Dataset(data=dataset.get_data().copy())
     
-    normalized_dataset = []
-    
-    for attribute in dataset:
-        if not isinstance(attribute, list):
-            raise TypeError("Cada atributo en el dataset debe ser una lista.")
-        
-        if len(attribute) == 0:
-            raise ValueError("Los atributos en el dataset no pueden estar vacíos.")
-        
-        if all(isinstance(val, (int, float)) for val in attribute):
-            normalized_attribute = normalize_variable(attribute)
-        else:
-            normalized_attribute = attribute
-        
-        normalized_dataset.append(normalized_attribute)
+    for attribute in normalized_dataset.get_attributes():
+        values = normalized_dataset.get_attribute(attribute)
+        if np.issubdtype(values.dtype, np.number):
+            normalized_values = normalize_variable(values)
+            normalized_dataset.set_attribute(attribute, normalized_values)
     
     return normalized_dataset
-
 
 def standardize_dataset(dataset):
     """
     Realiza la estandarización de todas las variables numéricas en un dataset.
 
     Parámetros:
-    - dataset (list): Un dataset representado como una lista de listas, donde cada lista interna representa
-                      una columna o atributo del dataset.
+    - dataset (Dataset): Un dataset.
 
     Devoluciones:
-    - standardized_dataset (list): Un nuevo dataset con las variables numéricas estandarizadas.
+    - standardized_dataset (Dataset): Un nuevo dataset con las variables numéricas estandarizadas.
     """
-    if not isinstance(dataset, list):
-        raise TypeError("El argumento 'dataset' debe ser una lista.")
+    if not isinstance(dataset, (Dataset, pd.DataFrame)):
+        raise TypeError("El argumento 'dataset' debe ser un Dataset  de pandas.")
     
-    if len(dataset) == 0:
-        raise ValueError("El dataset no puede estar vacío.")
+    standardized_dataset = Dataset(data=dataset.get_data().copy())
     
-    standardized_dataset = []
-    
-    for attribute in dataset:
-        if not isinstance(attribute, list):
-            raise TypeError("Cada atributo en el dataset debe ser una lista.")
-        
-        if len(attribute) == 0:
-            raise ValueError("Los atributos en el dataset no pueden estar vacíos.")
-        
-        if all(isinstance(val, (int, float)) for val in attribute):
-            standardized_attribute = standardize_variable(attribute)
-        else:
-            standardized_attribute = attribute
-        
-        standardized_dataset.append(standardized_attribute)
+    for attribute in standardized_dataset.get_attributes():
+        values = standardized_dataset.get_attribute(attribute)
+        if np.issubdtype(values.dtype, np.number):
+            standardized_values = standardize_variable(values)
+            standardized_dataset.set_attribute(attribute, standardized_values)
     
     return standardized_dataset
-
-
-
-def normalize_dataframe(df):
-    """
-    Obtiene un nuevo DataFrame con los valores normalizados para cada columna numérica del DataFrame dado.
-
-    Parámetros:
-    - df (pandas.DataFrame): Un DataFrame con valores numéricos.
-
-    Devoluciones:
-    - normalized_df (pandas.DataFrame): Un nuevo DataFrame con los valores normalizados para cada columna numérica.
-    """
-    normalized_data = normalize_dataset(df.values.T.tolist())
-    normalized_df = pd.DataFrame(normalized_data).T
-    normalized_df.columns = df.columns
-    return normalized_df
-
-
-def standardize_dataframe(df):
-    """
-    Obtiene un nuevo DataFrame con los valores estandarizados para cada columna numérica del DataFrame dado.
-
-    Parámetros:
-    - df (pandas.DataFrame): Un DataFrame con valores numéricos.
-
-    Devoluciones:
-    - standardized_df (pandas.DataFrame): Un nuevo DataFrame con los valores estandarizados para cada columna numérica.
-    """
-    standardized_data = standardize_dataset(df.values.T.tolist())
-    standardized_df = pd.DataFrame(standardized_data).T
-    standardized_df.columns = df.columns
-    return standardized_df
-
-
-
 
 
 

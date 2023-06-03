@@ -88,7 +88,7 @@ def calculate_auc(attribute_values, class_labels):
 
     auc = np.trapz(tpr_values, fpr_values)
 
-    return auc
+    return tpr_values, fpr_values, auc
 
 def calculate_attribute_entropy(dataset, attribute):
     """
@@ -158,7 +158,8 @@ def calculate_attribute_auc(dataset, attribute, class_attribute):
         attribute_values = dataset.get_attribute(attribute)
         class_labels = dataset.get_attribute(class_attribute)
         if attribute_values.dtype != 'object' and class_labels.dtype != 'object':
-            return calculate_auc(attribute_values, class_labels)
+            tpr_values, fpr_values, auc = calculate_auc(attribute_values, class_labels)
+            return auc
         else:
             raise ValueError(f"El atributo '{attribute}' o el atributo de clase '{class_attribute}' no son continuos.")
     except ValueError as e:

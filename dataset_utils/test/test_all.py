@@ -7,6 +7,7 @@ from dataset_utils.filtering import *
 from dataset_utils.correlation import *
 from dataset_utils.visualization import *
 
+
 # Cargar librerias
 import random
 
@@ -154,35 +155,30 @@ atributo2 = "marks"
 correlation_matrix = calculate_correlation(dataset, atributo1, atributo2)
 print(f'La correlación entre {atributo1} y {atributo2} es: {correlation_matrix}')
 
-
+matrix = calculate_correlation_matrix(dataset)
+print(matrix)
 
 
 ###########################################
 #               VISUALIZACIÓN             #
 ###########################################
 
-# Graficar la curva ROC y el AUC
-plot_auc(fpr, tpr, auc_score)
-
 # Graficar la matriz de correlación
-plot_correlation_matrix(correlation_matrix)
+plot_correlation_matrix(matrix)
 
-# Graficar los valores de entropía
-entropy_values = [0.1, 0.5, 0.3]
-labels = ['A', 'B', 'C']
-plot_entropy(entropy_values, labels)
+# Graficar la entropia de Age y  Marks, 
+entropy_values = []
 
-###########################################
-#               VISUALIZACIÓN             #
-###########################################
+entropy_values.append(calculate_attribute_entropy(dataset,'Age'))
+entropy_values.append(calculate_attribute_entropy(dataset,'marks'))
+plot_entropy(entropy_values, ['Age', 'marks'])
 
-# Graficar la curva ROC y el AUC
-plot_auc(fpr, tpr, auc_score)
+# Graficar la entropia de Age
+variance_values = []
+variance_values.append(calculate_attribute_variance(dataset,'Course_Grade'))
+variance_values.append(calculate_attribute_variance(dataset,'Course_Grade'))
+plot_entropy(variance_values, ['Course_Grade', 'Course_Grade'])
 
-# Graficar la matriz de correlación
-plot_correlation_matrix(correlation_matrix)
-
-# Graficar los valores de entropía
-entropy_values = [0.1, 0.5, 0.3]
-labels = ['A', 'B', 'C']
-plot_entropy(entropy_values, labels)
+#Gracicar el AUC del atributo 'edad' en relación al atributo de clase 'Bin'
+#plot_auc(auc)
+plot_auc_roc(dataset, 'Age', 'Bin')

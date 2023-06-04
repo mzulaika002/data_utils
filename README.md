@@ -32,3 +32,11 @@ Las principales funcionalidades implementadas en este paquete son:
 Puedes instalar `data_utils` utilizando pip:
 
     pip install data_utils
+    
+Módulo de python instalable que facilite la distribución del software desarrollado en la carpeta `dist`
+
+    pip install dist/dataset_utils-0.1.0.tar.gz
+  
+o
+
+    pip install dist/dataset_utils-0.1.0-py3-none-any.whl

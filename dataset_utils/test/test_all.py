@@ -180,5 +180,4 @@ variance_values.append(calculate_attribute_variance(dataset,'Course_Grade'))
 plot_entropy(variance_values, ['Course_Grade', 'Course_Grade'])
 
 #Gracicar el AUC del atributo 'edad' en relación al atributo de clase 'Bin'
-#plot_auc(auc)
-plot_auc_roc(dataset, 'Age', 'Bin')
+plot_roc_auc(dataset, 'Age', 'Bin')

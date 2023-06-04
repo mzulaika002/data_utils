@@ -1,7 +1,6 @@
 ################################################################################
-# #
-# #
-##
+# Este script "visualization.py" proporciona la definición de varias funciones #
+# de visualización de las métricas utilizando la biblioteca Matplotlib         #
 # *****************************************************************************#
 # Autora:   Muitze Zulaika Gallastegi                                          #
 # Fecha:    02/06/2023                                                         #
@@ -15,61 +14,9 @@ import seaborn as sns
 
 # CARGAR FUNCIONES DE OTROS FICHEROS -------------------------------------------
 from dataset_utils.dataset import Dataset
+from dataset_utils.metrics import  *
 
 # FUNCIONES --------------------------------------------------------------------
-'''
-def plot_auc(fpr, tpr, auc_score):
-    """
-    Función para graficar la curva ROC y el AUC.
-    
-    Args:
-        fpr (array): Valores de tasa de falsos positivos.
-        tpr (array): Valores de tasa de verdaderos positivos.
-        auc_score (float): Valor del AUC.
-    """
-    plt.figure(figsize=(6, 6))
-    plt.plot(fpr, tpr, label='ROC curve (AUC = %0.2f)' % auc_score)
-    plt.plot([0, 1], [0, 1], 'k--')
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('Receiver Operating Characteristic')
-    plt.legend(loc="lower right")
-    plt.show()
-
-def plot_correlation_matrix(matrix):
-    """
-    Función para graficar la matriz de correlación.
-    
-    Args:
-        matrix (array): Matriz de correlación.
-    """
-    plt.figure(figsize=(8, 8))
-    sns.heatmap(matrix, annot=True, fmt=".2f", cmap='coolwarm',
-                cbar=True, square=True, linewidths=0.5)
-    plt.title('Correlation Matrix')
-    plt.show()
-
-def plot_entropy(entropy_values, labels):
-    """
-    Función para graficar los valores de entropía.
-    
-    Args:
-        entropy_values (array): Valores de entropía.
-        labels (list): Etiquetas para cada valor de entropía.
-    """
-    plt.figure(figsize=(8, 6))
-    plt.bar(range(len(entropy_values)), entropy_values)
-    plt.xticks(range(len(entropy_values)), labels, rotation='vertical')
-    plt.xlabel('Variable')
-    plt.ylabel('Entropy')
-    plt.title('Entropy of Variables')
-    plt.show()
-'''
-
-
-
 def plot_entropy(entropy_values, attribute_names):
     """
     Genera un gráfico de barras para visualizar los valores de entropía.
@@ -137,20 +84,36 @@ def plot_correlation_matrix(correlation_matrix):
     plt.title('Matriz de Correlación')
     plt.show()
 
-def plot_auc_roc(dataset, attribute, class_attribute):
+def plot_roc_auc(dataset, attribute, class_attribute):
+    """
+    Visualiza el plot de AUC y ROC de un atributo específico del conjunto de datos en relación al atributo de clase.
+
+    Parámetros:
+    - dataset (Dataset): Objeto Dataset que contiene los datos.
+    - attribute (str): Nombre del atributo a calcular el AUC.
+    - class_attribute (str): Nombre del atributo de clase binario.
+
+    Excepciones:
+    - ValueError: Si el atributo no existe en el conjunto de datos, no es continuo o el atributo de clase no existe.
+    """
     try:
         attribute_values = dataset.get_attribute(attribute)
         class_labels = dataset.get_attribute(class_attribute)
         if attribute_values.dtype != 'object' and class_labels.dtype != 'object':
-            auc, tpr_values, fpr_values = calculate_auc(attribute_values, class_labels)
-            plt.plot(fpr_values, tpr_values, label=f"AUC = {auc:.2f}")
+            tpr_values, fpr_values, auc = calculate_auc(attribute_values, class_labels)
+
+            plt.figure(figsize=(8, 6))
+            plt.plot(fpr_values, tpr_values, label=f'AUC = {auc:.2f}')
             plt.plot([0, 1], [0, 1], 'k--')
+            plt.xlim([0.0, 1.0])
+            plt.ylim([0.0, 1.05])
             plt.xlabel('False Positive Rate')
             plt.ylabel('True Positive Rate')
-            plt.title('Receiver Operating Characteristic (ROC)')
-            plt.legend(loc='lower right')
+            plt.title(f'ROC Curve - Attribute: {attribute}, Class Attribute: {class_attribute}')
+            plt.legend(loc="lower right")
             plt.show()
         else:
             raise ValueError(f"El atributo '{attribute}' o el atributo de clase '{class_attribute}' no son continuos.")
     except ValueError as e:
         print(e)
+

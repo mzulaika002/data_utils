@@ -8,7 +8,7 @@ ds = Dataset()
 ds.show_help()
 
 # Leer datos desde un archivo
-ds = ds.read_data('/home/mz/Mahaigaina/KISA/SME/Python/datasets/Student_bucketing.csv')
+ds = ds.read_data('Student_bucketing.csv')
 
 # Obtener el DataFrame del conjunto de datos
 data = ds.get_data()

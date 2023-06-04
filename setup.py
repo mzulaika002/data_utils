@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
    name='dataset_utils',
-   version='0.0.1',
+   version='0.1.0',
    author='Muitze Zulaika Gallastegi',
    author_email='mzulaika002@ikasle.ehu.eus',
    packages=['dataset_utils', 'dataset_utils.test'],
@@ -14,6 +14,7 @@ setup(
    install_requires=[
       "seaborn >= 0.9.0",
       "pandas >= 0.25.1",
+      "matplotlib >= 3.1.1",
       "numpy >=1.17.2"
    ],
    python_requires='>=3.6',

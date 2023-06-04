@@ -20,7 +20,7 @@ import random
 dataset = Dataset()
 
 # Leer datos desde un archivo
-dataset = dataset.read_data('/home/mz/Mahaigaina/KISA/SME/Python/datasets/Student_bucketing.csv')
+dataset = dataset.read_data('Student_bucketing.csv')
 
 # Obtener los valores de un atributo específico
 attribute_values = dataset.get_attribute('Age')

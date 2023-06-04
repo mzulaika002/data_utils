@@ -32,9 +32,3 @@ Las principales funcionalidades implementadas en este paquete son:
 Puedes instalar `data_utils` utilizando pip:
 
     pip install data_utils
-
-## Uso
-
-Aquí se proporcionarán ejemplos de uso de las funciones implementadas en data_utils.
-
-#TODO

@@ -48,7 +48,6 @@ def calculate_correlation(dataset, variable1, variable2):
         print("Error:", str(e))
         return None
 
-
 def calculate_correlation_matrix(dataset):
     """
     Calcula la correlación (información mutua para variables categóricas) por pares entre las variables del dataset.
@@ -102,7 +101,6 @@ def calculate_numeric_correlation(values1, values2):
     std2 = math.sqrt(sum((x - mean2) ** 2 for x in values2) / n)
     correlation = cov / (std1 * std2)
     return correlation
-
 
 def calculate_categorical_mutual_information(variable1, variable2, data):
     """
